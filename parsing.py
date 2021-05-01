@@ -1,13 +1,16 @@
 import re
 import os
 import zipfile
-from sklearn.feature_extraction.text import CountVectorizer
-import pandas as pd
 
 # Regular expressions to extract data from the corpus
 doc_regex = re.compile("<DOC>.*?</DOC>", re.DOTALL)
 docno_regex = re.compile("<DOCNO>.*?</DOCNO>")
 text_regex = re.compile("<TEXT>.*?</TEXT>", re.DOTALL)
+termIndexMap = {}
+docIndexMap = {}
+termIndexMapCount = 1
+docIndexCount = 1
+map = []
 
 
 with zipfile.ZipFile("ap89_collection_small.zip", 'r') as zip_ref:
@@ -30,37 +33,49 @@ for file in allfiles:
 
         stop_file.close()
         
+        
         for document in result[0:]:
             # Retrieve contents of DOCNO tag
             docno = re.findall(docno_regex, document)[0].replace("<DOCNO>", "").replace("</DOCNO>", "").strip()
+            # print(docno)
+            if (docno != "AP890101-0001"): # FIXME FOR TESTING ONLY
+                continue
             # Retrieve contents of TEXT tag
             text = "".join(re.findall(text_regex, document))\
                       .replace("<TEXT>", "").replace("</TEXT>", "")\
                       .replace("\n", " ")
-
-            # Vectorizer creates a dataframe counting frequency of each word
-            vectorizer = CountVectorizer(lowercase=True, stop_words=stopwords)
-            matrix = vectorizer.fit_transform([text])
-            df = pd.DataFrame(matrix.toarray(), columns=vectorizer.get_feature_names())
-            # print(df)
 
             # step 1 - lower-case words, remove punctuation, remove stop-words, etc. 
             text = text.lower()
             # Regex removes punctuation
             text = re.sub(r'[^\w\s]','',text)
             text = text.split()
-            # Nested loops removes stop-words
+            # Nested loops remove stop-words
             for term in stopwords:
                 for word in text:
                     if word == term:
                         text.remove(word)
-
-            print(text)
-
-
-            
+            # print(text)
 
             # step 2 - create tokens 
+            #Add document ID and name to docIndexMap
+            docIndexMap[docIndexCount] = docno
 
-            # step 3 - build index
+            locationCount = 1
+            for word in text:
+                if word not in termIndexMap.values():
+                    termIndexMap[termIndexMapCount] = word
+                    termIndexMapCount += 1
             
+                key_list = list(termIndexMap.keys())
+                val_list = list(termIndexMap.values())
+                position = val_list.index(word)
+                newEntry = [key_list[position], docIndexCount, locationCount]
+                locationCount += 1
+                map.append(newEntry)
+
+            # print(map)
+            docIndexCount += 1
+            # step 3 - build index
+        # print(termIndex)
+        exit
