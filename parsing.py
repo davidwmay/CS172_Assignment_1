@@ -106,8 +106,8 @@ for key in key_list:
     termInfo[key].append(newEntry)
 print(termInfo[3]) # For testing, to observe output for a single term
 
-# if len(sys.argv) != (3 or 5): 
-#     raise ValueError('Please provide a query, either --doc DOCNAMe or --term TERM or both.')
+if len(sys.argv) != (3 or 5): 
+    raise ValueError('Please provide a query, either --doc DOCNAMe or --term TERM or both.')
 
 if sys.argv[1] == '--doc':
     print("Listing for document: ", sys.argv[1])
