@@ -1,6 +1,7 @@
 import re
 import os
 import zipfile
+import sys
 
 # Regular expressions to extract data from the corpus
 doc_regex = re.compile("<DOC>.*?</DOC>", re.DOTALL)
@@ -10,7 +11,8 @@ termIndexMap = {}
 docIndexMap = {}
 termIndexMapCount = 1
 docIndexCount = 1
-map = []
+map = [] 
+termInfo = {}
 
 
 with zipfile.ZipFile("ap89_collection_small.zip", 'r') as zip_ref:
@@ -33,13 +35,14 @@ for file in allfiles:
 
         stop_file.close()
         
+
         
-        for document in result[0:]:
+        for document in result[0:3]:
             # Retrieve contents of DOCNO tag
             docno = re.findall(docno_regex, document)[0].replace("<DOCNO>", "").replace("</DOCNO>", "").strip()
             # print(docno)
-            if (docno != "AP890101-0001"): # FIXME FOR TESTING ONLY
-                continue
+            # if (docno != "AP890101-0001"): # FIXME FOR TESTING ONLY
+            #     continue
             # Retrieve contents of TEXT tag
             text = "".join(re.findall(text_regex, document))\
                       .replace("<TEXT>", "").replace("</TEXT>", "")\
@@ -74,8 +77,27 @@ for file in allfiles:
                 locationCount += 1
                 map.append(newEntry)
 
+                # keyval = map[0][0]
+                # print(termIndexMap[keyval])
+
+            docIndexCount += 1 
+
             # print(map)
-            docIndexCount += 1
-            # step 3 - build index
-        # print(termIndex)
-        exit
+key_list = list(termIndexMap.keys())
+val_list = list(termIndexMap.values())
+        # Creates posting list for each term in map
+for key in key_list:
+    termInfo[key] = []
+    tempDict = {}
+    for entry in map:
+        if entry[0] == key:
+            if entry[1] not in tempDict:
+                tempDict[entry[1]] = [1, [entry[2]]]
+            else:
+                frequency = tempDict[entry[1]][0]
+                frequency += 1
+                tempDict[entry[1]][0] = frequency
+                tempDict[entry[1]][1].append(entry[2])
+    termInfo[key].append(tempDict)
+    print(termInfo[key])
+        # step 3 - build index
