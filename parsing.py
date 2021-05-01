@@ -37,7 +37,7 @@ for file in allfiles:
         
 
         
-        for document in result[0:3]:
+        for document in result[0:1]:
             # Retrieve contents of DOCNO tag
             docno = re.findall(docno_regex, document)[0].replace("<DOCNO>", "").replace("</DOCNO>", "").strip()
             # print(docno)
@@ -83,21 +83,27 @@ for file in allfiles:
             docIndexCount += 1 
 
             # print(map)
+
 key_list = list(termIndexMap.keys())
 val_list = list(termIndexMap.values())
-        # Creates posting list for each term in map
+
+
+# Creates posting list for each term in map
 for key in key_list:
     termInfo[key] = []
     tempDict = {}
+    totalFrequency = 0
+    numDocs = 0
     for entry in map:
         if entry[0] == key:
+            totalFrequency += 1
             if entry[1] not in tempDict:
+                numDocs += 1
                 tempDict[entry[1]] = [1, [entry[2]]]
             else:
-                frequency = tempDict[entry[1]][0]
-                frequency += 1
+                frequency = tempDict[entry[1]][0] + 1
                 tempDict[entry[1]][0] = frequency
                 tempDict[entry[1]][1].append(entry[2])
-    termInfo[key].append(tempDict)
-    print(termInfo[key])
-        # step 3 - build index
+    newEntry = [totalFrequency, numDocs, tempDict]
+    termInfo[key].append(newEntry)
+print(termInfo[3]) # For testing, to observe output for a single term
