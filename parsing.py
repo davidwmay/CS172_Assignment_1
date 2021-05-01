@@ -83,9 +83,10 @@ for file in allfiles:
             docIndexCount += 1 
 
             # print(map)
+
+# creates termInfo dict, which stores tempDict entries containing docID, freq, and posting list
 key_list = list(termIndexMap.keys())
 val_list = list(termIndexMap.values())
-        # Creates posting list for each term in map
 for key in key_list:
     termInfo[key] = []
     tempDict = {}
@@ -99,5 +100,14 @@ for key in key_list:
                 tempDict[entry[1]][0] = frequency
                 tempDict[entry[1]][1].append(entry[2])
     termInfo[key].append(tempDict)
-    print(termInfo[key])
-        # step 3 - build index
+    # print(termInfo[key])
+
+if len(sys.argv) != (3 or 5): 
+    raise ValueError('Please provide a query, either --doc DOCNAMe or --term TERM or both.')
+
+if sys.argv[1] == '--doc':
+    print("Listing for document: ", sys.argv[1])
+    #FIXME: print docID (optional), distinct terms (optional), and total terms 
+elif sys.argv[1] == '--term':
+    print("Listing for term: ", sys.argv[1])
+    
