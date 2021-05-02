@@ -104,13 +104,33 @@ for key in key_list:
                 tempDict[entry[1]][1].append(entry[2])
     newEntry = [totalFrequency, numDocs, tempDict]
     termInfo[key].append(newEntry)
-print(termInfo[3]) # For testing, to observe output for a single term
+# print(termInfo[3]) # For testing, to observe output for a single term
 
-# if len(sys.argv) != (3 or 5): 
-#     raise ValueError('Please provide a query, either --doc DOCNAMe or --term TERM or both.')
+main_key_list = list(termInfo.keys())
+main_val_list = list(termInfo.values())
+
+doc_key_list = list(docIndexMap.keys())
+doc_val_list = list(docIndexMap.values())
+
+if len(sys.argv) != (3 or 5): 
+    raise ValueError('Please provide a query, either --doc DOCNAME or --term TERM or both.')
 
 if sys.argv[1] == '--doc':
-    print("Listing for document: ", sys.argv[1])
-    #FIXME: print docID (optional), distinct terms (optional), and total terms 
+    print("Listing for document: ", sys.argv[2])
+    #FIXME: print distinct terms (optional)
+    docID = 0
+    termCount = 0
+    for docname in doc_val_list:
+        if sys.argv[2] == docname:
+            position = doc_val_list.index(docname)
+            docID = doc_key_list[position]
+    print("DOCID: ", docID)
+
+    for entry in map:
+        if entry[1] == docID:
+            termCount += 1 
+    print("Total terms: ", termCount)
+
+    
 elif sys.argv[1] == '--term':
     print("Listing for term: ", sys.argv[1])
