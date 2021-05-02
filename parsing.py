@@ -112,6 +112,12 @@ main_val_list = list(termInfo.values())
 doc_key_list = list(docIndexMap.keys())
 doc_val_list = list(docIndexMap.values())
 
+def get_term_key():
+    return key_list
+
+def get_term_val():
+    return val_list
+
 def get_main_key():
     return main_key_list
 
@@ -126,3 +132,6 @@ def get_doc_val():
 
 def get_map():
     return map
+
+def get_termInfo():
+    return termInfo
