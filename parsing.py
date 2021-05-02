@@ -131,6 +131,8 @@ if sys.argv[1] == '--doc':
             termCount += 1 
     print("Total terms: ", termCount)
 
-    
 elif sys.argv[1] == '--term':
-    print("Listing for term: ", sys.argv[1])
+    print("Listing for term: ", sys.argv[2])
+    #FIXME: print termID, num of docs containing term, term frequency 
+
+elif (sys.argv[1] == '--doc' and sys.argv[3] == '--term') or (sys.argv[1] == '--term' and sys.argv[3] == '--doc')
