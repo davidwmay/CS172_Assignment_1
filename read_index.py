@@ -25,12 +25,13 @@ map = get_map()
 
 termInfo = get_termInfo()
 
-# FIXME: throwing error on correct --term and --doc query
-# if len(sys.argv) != (3 or 5): 
-#     raise ValueError('Please provide a query, either --term TERM or --doc DOCNAME or both.')
+print(len(sys.argv))
+if not(len(sys.argv) == 3 or len(sys.argv) == 5): 
+    raise ValueError('Please provide a query, either --term TERM or --doc DOCNAME or both.')
 
 # FIXME: print distinct terms (optional), auto-uppercase the document argument
-if sys.argv[1] == '--doc' and len(sys.argv) <= 2:
+if sys.argv[1] == '--doc' and len(sys.argv) <= 3:
+    sys.argv[2] = sys.argv[2].upper()
     print("Listing for document: ", sys.argv[2])
     docID = 0
     termCount = 0
@@ -44,9 +45,8 @@ if sys.argv[1] == '--doc' and len(sys.argv) <= 2:
         if entry[1] == docID:
             termCount += 1 
     print("Total terms: ", termCount)
-
 # FIXME: stem term
-elif sys.argv[1] == '--term' and len(sys.argv) <= 2:
+elif sys.argv[1] == '--term' and len(sys.argv) <= 3:
     print("Listing for term: ", sys.argv[2])
     termID = 0
     for term in term_val_list:
@@ -57,7 +57,6 @@ elif sys.argv[1] == '--term' and len(sys.argv) <= 2:
     # print(termInfo[termID])
     print("Number of documents containing term: ", termInfo[termID][0][1])
     print("Term frequency in corpus: ", termInfo[termID][0][0])
-
 # FIXME: auto-uppercase doc argument, create valuerror outputs for incorrect inputs
 elif (sys.argv[1] == '--doc' and sys.argv[3] == '--term') or (sys.argv[1] == '--term' and sys.argv[3] == '--doc'):
     if sys.argv[1] == '--doc' and sys.argv[3] == '--term':
@@ -65,6 +64,7 @@ elif (sys.argv[1] == '--doc' and sys.argv[3] == '--term') or (sys.argv[1] == '--
         sys.exit()
     termID = 0 
     docID = 0
+    sys.argv[4] = sys.argv[4].upper()
     print("Listing for term: ", sys.argv[2])
     print("In document: ", sys.argv[4])
     for term in term_val_list:
@@ -79,7 +79,7 @@ elif (sys.argv[1] == '--doc' and sys.argv[3] == '--term') or (sys.argv[1] == '--
     print("DOCID: ", docID)
 
     smallList = termInfo[termID][0][2].items()
-    # FIXME: not sure if this works, finds matching key to docID and puts the key and value in that dictionary entry into a tuple
+    newTuple = ()
     for key,freq in smallList:
        if key == docID:
            newTuple = (key,freq)
