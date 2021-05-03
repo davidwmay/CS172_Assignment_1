@@ -37,7 +37,7 @@ for file in allfiles:
         
 
         
-        for document in result[0:1]:
+        for document in result[0:]:
             # Retrieve contents of DOCNO tag
             docno = re.findall(docno_regex, document)[0].replace("<DOCNO>", "").replace("</DOCNO>", "").strip()
             # print(docno)
@@ -104,13 +104,34 @@ for key in key_list:
                 tempDict[entry[1]][1].append(entry[2])
     newEntry = [totalFrequency, numDocs, tempDict]
     termInfo[key].append(newEntry)
-print(termInfo[3]) # For testing, to observe output for a single term
+# print(termInfo[3]) # For testing, to observe output for a single term
 
-# if len(sys.argv) != (3 or 5): 
-#     raise ValueError('Please provide a query, either --doc DOCNAMe or --term TERM or both.')
+main_key_list = list(termInfo.keys())
+main_val_list = list(termInfo.values())
 
-if sys.argv[1] == '--doc':
-    print("Listing for document: ", sys.argv[1])
-    #FIXME: print docID (optional), distinct terms (optional), and total terms 
-elif sys.argv[1] == '--term':
-    print("Listing for term: ", sys.argv[1])
+doc_key_list = list(docIndexMap.keys())
+doc_val_list = list(docIndexMap.values())
+
+def get_term_key():
+    return key_list
+
+def get_term_val():
+    return val_list
+
+def get_main_key():
+    return main_key_list
+
+def get_main_val():
+    return main_val_list
+
+def get_doc_key():
+    return doc_key_list
+
+def get_doc_val():
+    return doc_val_list
+
+def get_map():
+    return map
+
+def get_termInfo():
+    return termInfo
